@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.futonredemption.mylocation" android:versionName="2.5" android:versionCode="25">
+	<application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="false">
+		<receiver android:name="AppWidgetProvider1x1" android:label="@string/widget_label_1x1"
+			android:enabled="true" android:exported="true">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/appwidget_1x1" />
+		</receiver>
+		<receiver android:name="AppWidgetProvider2x1" android:label="@string/widget_label_2x1"
+			android:enabled="true" android:exported="true">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/appwidget_2x1" />
+		</receiver>
+		<receiver android:name="AppWidgetProvider4x1" android:label="@string/widget_label_4x1"
+			android:enabled="true" android:exported="true">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/appwidget_4x1" />
+		</receiver>
+		<service android:name="WidgetUpdateService"></service>
+	</application>
+	<uses-sdk android:minSdkVersion="3" />
+
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.INTERNET" />
+</manifest> 
