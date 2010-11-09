@@ -55,6 +55,4 @@ public class AppWidgetProvider4x1 extends AppWidgetProvider
 
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
-
-	
 }

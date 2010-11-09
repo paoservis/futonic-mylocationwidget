@@ -45,8 +45,7 @@ public class WidgetUpdateService extends Service
 			_nm.cancel(Constants.NOTIFICATION_FindingLocation);
 		}
 	}
-	
-	
+
 	public void PostFindingLocationNotification(final CharSequence title, final CharSequence description, final CharSequence ticker_text)
 	{
 		Notification notifier = new Notification();
