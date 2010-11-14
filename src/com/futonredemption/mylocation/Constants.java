@@ -31,6 +31,7 @@ public class Constants
 	public static final String BLANK = "";
 	public static final String SPACE = " ";
 	
+	public static final String URL_FlickrPhotos = "http://m.flickr.com/nearby/%f,%f?show=thumb&fromfilter=1&by=everyone&taken=alltime&sort=mostrecent";
 	public static final String URL_GmapsBase = "http://maps.google.com/maps?q=%f,+%f+(%s)&iwloc=A&hl=en&z=13";
 	
 	public static final String FORMAT_Latitude = "Lat: %f";
