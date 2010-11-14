@@ -1,5 +1,7 @@
 package com.futonredemption.mylocation;
 
+import android.app.PendingIntent;
+
 public class Constants
 {
 	public static final String PARAM_Altitude = "PARAM_Altitude";
@@ -42,13 +44,14 @@ public class Constants
 	public static final String ACTION = "action";
 	public static final String ACTION_Refresh = "refresh";
 	public static final String ACTION_Cancel = "cancel";
-	public static final String ACTION_Nothing = "nothing";
 	
 	public static final int NOTIFICATION_LocationUpdated = 1;
-	public static final int NOTIFICATION_FindingLocation = 2;
+	public static final int NOTIFICATION_CustomMessage = 2;
 	public static final int NOTIFICATION_ShareLocation = 3;
 	
 	public static final int WIDGETLAYOUTSTATE_NotAvailable = 1;
 	public static final int WIDGETLAYOUTSTATE_Loading = 2;
 	public static final int WIDGETLAYOUTSTATE_Default = 3;
+	
+	public static final int PENDINGINTENT_FLAG = PendingIntent.FLAG_UPDATE_CURRENT;
 }

@@ -1,9 +1,13 @@
-package com.futonredemption.mylocation;
+package com.futonredemption.mylocation.appwidgets;
+
+import com.futonredemption.mylocation.Constants;
+import com.futonredemption.mylocation.ILocationWidgetInfo;
+import com.futonredemption.mylocation.R;
+import com.futonredemption.mylocation.WidgetUpdater;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 
 public class AppWidgetProvider1x1 extends AppWidgetProvider
@@ -12,8 +16,7 @@ public class AppWidgetProvider1x1 extends AppWidgetProvider
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
 	{
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		
-		WidgetUpdateService.InitialWidgetAppearance(context);
+		WidgetUpdater.setInitialWidgetAppearance(context);
 	}
 	
 	public static final int ConvertToLayoutId1x1(final int layoutstate_id)
@@ -28,26 +31,16 @@ public class AppWidgetProvider1x1 extends AppWidgetProvider
 		return R.layout.appwidget_2x1_notavailable;
 	}
 	
-	public static void UpdateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, final Bundle location)
+	public static void UpdateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, final ILocationWidgetInfo widgetInfo)
 	{
 		RemoteViews views = null;
 
-		final CharSequence lines[] = { Constants.BLANK, Constants.BLANK };
-		final int layout_id = ConvertToLayoutId1x1(location.getInt(Constants.PARAM_WidgetLayoutState));
-		
-		if(location.containsKey(Constants.PARAM_Line1))
-		{
-			lines[0] = location.getCharSequence(Constants.PARAM_Line1);
-		}
-		if(location.containsKey(Constants.PARAM_Line2))
-		{
-			lines[1] = location.getCharSequence(Constants.PARAM_Line2);
-		}
-		
+		final int layout_id = ConvertToLayoutId1x1(widgetInfo.getWidgetState());
+
 		views = new RemoteViews(context.getPackageName(), layout_id);
 
-		WidgetUpdater.AttachPendingServiceIntent(context, views, location, R.id.btnAction, Constants.PARAM_IntentAction);
-		WidgetUpdater.AttachPendingActivityIntent(context, views, location, R.id.btnShare, Constants.PARAM_IntentShareLocation);
+		WidgetUpdater.attachPendingServiceIntent(context, views, widgetInfo.getActionIntent(), R.id.btnAction);
+		WidgetUpdater.attachPendingActivityIntent(context, views, widgetInfo.getShareIntent(), R.id.btnShare);
 		
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
