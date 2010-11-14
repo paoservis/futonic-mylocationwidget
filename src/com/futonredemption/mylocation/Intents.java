@@ -49,7 +49,7 @@ public class Intents
 		
 		final Intent sendIntent = new Intent(Intent.ACTION_SEND);
 		sendIntent.setType(Constants.MIME_Email);
-		sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { Constants.BLANK });
+		sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "" });
 		sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		sendIntent.putExtra(Intent.EXTRA_TEXT, content);
 		return sendIntent;

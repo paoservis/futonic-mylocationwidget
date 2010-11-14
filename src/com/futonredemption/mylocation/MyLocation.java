@@ -165,6 +165,7 @@ public class MyLocation implements ILocationWidgetInfo {
 		return String.format(Locale.ENGLISH, Constants.URL_GmapsBase, getLatitude(), getLongitude(), Uri.encode(message));
 	}
 
+	
 	private String getGeoHackUrl() {
 		String pagename = "My_Location";
 		
@@ -172,10 +173,10 @@ public class MyLocation implements ILocationWidgetInfo {
 			pagename = getDescription().toString().replaceAll(" ", "_");
 		}
 		
-		return String.format(Locale.ENGLISH, "http://toolserver.org/~geohack/geohack.php?pagename=%s&language=en&params=%f;%f", Uri.encode(pagename), getLatitude(), getLongitude());
+		return String.format(Locale.ENGLISH, Constants.URL_GeoHack, Uri.encode(pagename), getLatitude(), getLongitude());
 	}
 	private String getPanoramioPhotosUrl() {
-		return String.format(Locale.ENGLISH, "http://www.panoramio.com/map/#lt=%f&ln=%f&z=0&k=2", getLatitude(), getLongitude());
+		return String.format(Locale.ENGLISH, Constants.URL_PanoramioPhotos, getLatitude(), getLongitude());
 	}
 	
 	public Intent getNotificationIntent() {
