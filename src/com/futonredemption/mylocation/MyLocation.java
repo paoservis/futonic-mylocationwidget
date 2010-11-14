@@ -30,15 +30,7 @@ public class MyLocation implements ILocationWidgetInfo {
 	public double getLongitude() {
 		return _location.getLongitude();
 	}
-	
-	public static class util {
-		public static class Log {
-			public static void d(String tag, String msg) {
-				if(msg == null) msg = "[null]";
-				android.util.Log.d(tag, msg);
-			}
-		}
-	}
+
 	public CharSequence getTitle() {
 		CharSequence title = null;
 		
@@ -118,9 +110,8 @@ public class MyLocation implements ILocationWidgetInfo {
 		}
 		
 		final CharSequence title = _context.getText(R.string.share_location);
-		final int iconResId = R.drawable.stat_icon;
 		
-		return IntentChooser.createChooserIntent(_context, title, iconResId, intents);
+		return IntentChooser.createChooserIntent(_context, title, intents);
 	}
 
 	private ChoosableIntent createChoosable(final int stringId, final Intent intent) {
@@ -147,11 +138,9 @@ public class MyLocation implements ILocationWidgetInfo {
 		intents.add(createChoosable(R.string.nolocal_flickr_photos, Intents.viewWebsite(getFlickrPhotosUrl())));
 		intents.add(createChoosable(R.string.nolocal_panoramio_photos, Intents.viewWebsite(getPanoramioPhotosUrl())));
 		intents.add(createChoosable(R.string.nolocal_info_from_geohack, Intents.viewWebsite(getGeoHackUrl())));
-		
-		
+
 		final CharSequence title = _context.getText(R.string.view_location);
-		final int iconResId = R.drawable.stat_icon;
-		return IntentChooser.createChooserIntent(_context, title, iconResId, intents);
+		return IntentChooser.createChooserIntent(_context, title, intents);
 	}
 
 	public int getWidgetState() {

@@ -185,18 +185,39 @@ public class WidgetUpdateService extends Service {
 	}
 
 	public void ResolveAddress(MyLocation location) {
-		Geocoder coder = new Geocoder(this);
+		
 		final double latitude = location.getLatitude();
 		final double longitude = location.getLongitude();
 
+		Address address = null;
+		
+		// Try to get the address up to 3 times. Sometimes the first attempt doesn't work.
+		address = tryFindAddress(latitude, longitude);
+		if(address == null) {
+			address = tryFindAddress(latitude, longitude);
+		}
+		if(address == null) {
+			address = tryFindAddress(latitude, longitude);
+		}
+		
+		if (address != null) {
+			location.attachAddress(address);
+		}
+	}
+	
+	private Address tryFindAddress(double latitude, double longitude) {
+		final Geocoder coder = new Geocoder(this);
+		Address address = null;
 		try {
+			
 			final List<Address> addresses = coder.getFromLocation(latitude, longitude, 1);
 			if (addresses.size() > 0) {
-				final Address address = addresses.get(0);
-				location.attachAddress(address);
+				address = addresses.get(0);
 			}
 		} catch (Exception e) {
 		}
+		
+		return address;
 	}
 
 	public void onLocationAcquired(final MyLocation location) {
