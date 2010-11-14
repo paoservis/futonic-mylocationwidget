@@ -26,6 +26,8 @@
     <string name="nolocal_google_maps">Google Maps</string>
     <string name="nolocal_flickr_photos">Photos on Flickr</string>
 	<string name="nolocal_panoramio_photos">Photos on Panoramio</string>
+	<string name="nolocal_info_from_geohack">Info from GeoHack</string>
+	
 
     <string name="you_are_here">You are Here</string>
     <string name="your_friend_is_here">Your Friend is Here</string>

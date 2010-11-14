@@ -30,16 +30,19 @@ public class Intents
 		return chooserIntent;
 	}
 	
+	// FIXME: Hash codes are a hack here since it wastes pendingintents.
 	public static PendingIntent createPendingActivity(final Context context, final Intent intent) {
-		return PendingIntent.getActivity(context, 0, intent, Constants.PENDINGINTENT_FLAG);
+		return PendingIntent.getActivity(context, intent.hashCode(), intent, Constants.PENDINGINTENT_FLAG);
 	}
 	
 	public static PendingIntent createPendingService(final Context context, final Intent intent) {
-		return PendingIntent.getService(context, 0, intent, Constants.PENDINGINTENT_FLAG);
+		return PendingIntent.getService(context, intent.hashCode(), intent, Constants.PENDINGINTENT_FLAG);
 	}
 	
 	public static Intent viewWebsite(final String url) {
-		return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		final Intent viewUrl = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		viewUrl.addCategory(Intent.CATEGORY_DEFAULT);
+		return viewUrl;
 	}
 	
 	public static Intent createSend(final CharSequence subject, final CharSequence content) {

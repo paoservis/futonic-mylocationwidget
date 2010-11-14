@@ -146,6 +146,8 @@ public class MyLocation implements ILocationWidgetInfo {
 		intents.add(createChoosable(R.string.nolocal_google_maps, Intents.viewWebsite(getGoogleMapsUrl(getOneLineAddress()))));
 		intents.add(createChoosable(R.string.nolocal_flickr_photos, Intents.viewWebsite(getFlickrPhotosUrl())));
 		intents.add(createChoosable(R.string.nolocal_panoramio_photos, Intents.viewWebsite(getPanoramioPhotosUrl())));
+		intents.add(createChoosable(R.string.nolocal_info_from_geohack, Intents.viewWebsite(getGeoHackUrl())));
+		
 		
 		final CharSequence title = _context.getText(R.string.view_location);
 		final int iconResId = R.drawable.stat_icon;
@@ -163,6 +165,15 @@ public class MyLocation implements ILocationWidgetInfo {
 		return String.format(Locale.ENGLISH, Constants.URL_GmapsBase, getLatitude(), getLongitude(), Uri.encode(message));
 	}
 
+	private String getGeoHackUrl() {
+		String pagename = "My_Location";
+		
+		if (_address != null) {
+			pagename = getDescription().toString().replaceAll(" ", "_");
+		}
+		
+		return String.format(Locale.ENGLISH, "http://toolserver.org/~geohack/geohack.php?pagename=%s&language=en&params=%f;%f", Uri.encode(pagename), getLatitude(), getLongitude());
+	}
 	private String getPanoramioPhotosUrl() {
 		return String.format(Locale.ENGLISH, "http://www.panoramio.com/map/#lt=%f&ln=%f&z=0&k=2", getLatitude(), getLongitude());
 	}
