@@ -39,9 +39,10 @@ public class MyLocation implements ILocationWidgetInfo {
 				title = _address.getAddressLine(0);
 			}
 		}
+		else {
+			title = _context.getText(R.string.coordinates);
+		}
 		
-		title = _context.getText(R.string.coordinates);
-
 		return title;
 	}
 	
@@ -49,10 +50,16 @@ public class MyLocation implements ILocationWidgetInfo {
 		CharSequence description = null;
 		
 		if(_address != null) {
-			description = _address.getFeatureName();
+			if(_address.getMaxAddressLineIndex() > 1) {
+				description = _address.getAddressLine(1);
+			}
+			else {
+				description = _address.getFeatureName();
+			}
 		}
-		
-		description = getOneLineCoordinates();
+		else {
+			description = getOneLineCoordinates();
+		}
 		
 		return description;
 	}
@@ -117,6 +124,10 @@ public class MyLocation implements ILocationWidgetInfo {
 	
 	private String getGoogleMapsUrl(String message) {
 		return String.format(Locale.ENGLISH, Constants.URL_GmapsBase, getLatitude(), getLongitude(), Uri.encode(message));
+	}
+
+	public Intent getNotificationIntent() {
+		return getViewIntent();
 	}
 	
 	/*

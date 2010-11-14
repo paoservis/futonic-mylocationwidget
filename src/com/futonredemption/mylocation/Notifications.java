@@ -10,9 +10,9 @@ public class Notifications {
 	
 	public static void viewMap(final Context context, final ILocationWidgetInfo widgetInfo) {
 		
-		final Intent viewIntent = widgetInfo.getViewIntent(); 
-		if (viewIntent != null) {
-			final PendingIntent pIntent = PendingIntent.getActivity(context, 0, viewIntent, Constants.PENDINGINTENT_FLAG);
+		final Intent notifyIntent = widgetInfo.getNotificationIntent(); 
+		if (notifyIntent != null) {
+			final PendingIntent pIntent = PendingIntent.getActivity(context, 0, notifyIntent, Constants.PENDINGINTENT_FLAG);
 			NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			Notification notifier = null;
 			notifier = new Notification();

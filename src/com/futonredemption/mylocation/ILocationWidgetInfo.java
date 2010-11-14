@@ -8,5 +8,6 @@ public interface ILocationWidgetInfo {
 	Intent getActionIntent();
 	Intent getShareIntent();
 	Intent getViewIntent();
+	Intent getNotificationIntent();
 	int getWidgetState();
 }

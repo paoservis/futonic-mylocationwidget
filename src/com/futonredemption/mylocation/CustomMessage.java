@@ -61,4 +61,8 @@ public class CustomMessage implements ILocationWidgetInfo {
 	public Intent getViewIntent() {
 		return null;
 	}
+	
+	public Intent getNotificationIntent() {
+		return getViewIntent();
+	}
 }

@@ -16,15 +16,23 @@ public class InitialStateMessage extends CustomMessage {
 		return new InitialStateMessage(context, title, description, Constants.WIDGETLAYOUTSTATE_NotAvailable);
 	}
 	
+	@Override
 	public Intent getActionIntent() {
 		return Intents.actionRefresh(getContext());
 	}
 
+	@Override
 	public Intent getShareIntent() {
 		return Intents.actionRefresh(getContext());
 	}
 
+	@Override
 	public Intent getViewIntent() {
 		return Intents.actionRefresh(getContext());
+	}
+	
+	@Override
+	public Intent getNotificationIntent() {
+		return null;
 	}
 }

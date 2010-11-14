@@ -35,4 +35,7 @@ public class NoLocationAvailable implements ILocationWidgetInfo {
 		return Constants.WIDGETLAYOUTSTATE_NotAvailable;
 	}
 
+	public Intent getNotificationIntent() {
+		return getViewIntent();
+	}
 }
