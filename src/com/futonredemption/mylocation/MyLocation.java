@@ -87,13 +87,32 @@ public class MyLocation implements ILocationWidgetInfo {
 		return Intent.createChooser(addressShare, _context.getText(R.string.maps_link));
 	}
 	
+	private Intent getShareAddressWithMapLinkIntent() {
+		final String yourFriendIsHere = _context.getString(R.string.your_friend_is_here);
+		final StringBuilder message = new StringBuilder();
+		message.append(getOneLineAddress());
+		message.append(Constants.NEWLINE);
+		message.append(getGoogleMapsUrl(yourFriendIsHere));
+		
+		final Intent addressShare = Intents.createSend(_context.getText(R.string.my_location), message);
+		return Intent.createChooser(addressShare, _context.getText(R.string.address_with_link));
+	}
+	
 	public Intent getShareIntent() {
 		final ArrayList<ChoosableIntent> intents = new ArrayList<ChoosableIntent>();
-		intents.add(createChoosable(R.string.address, getShareAddressIntent()));
-		intents.add(createChoosable(R.string.maps_link, getShareMapsLinkIntent()));
+		if(_address != null) {
+			intents.add(createChoosable(R.string.address, getShareAddressIntent()));
+		}
 		intents.add(createChoosable(R.string.coordinates, getShareCoordinatesIntent()));
+		intents.add(createChoosable(R.string.maps_link, getShareMapsLinkIntent()));
+		if(_address != null) {
+			intents.add(createChoosable(R.string.address_with_link, getShareAddressWithMapLinkIntent()));
+		}
 		
-		return IntentChooser.createChooserIntent(_context, _context.getText(R.string.share_location), intents);
+		final CharSequence title = _context.getText(R.string.share_location);
+		final int iconResId = R.drawable.stat_icon;
+		
+		return IntentChooser.createChooserIntent(_context, title, iconResId, intents);
 	}
 
 	private ChoosableIntent createChoosable(final int stringId, final Intent intent) {

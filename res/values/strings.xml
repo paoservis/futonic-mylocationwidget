@@ -14,7 +14,13 @@
     <string name="tap_to_get_location">&lt; Tap icon to get location.</string>
     <string name="tap_to_cancel">Tap to cancel.</string>
     <string name="cannot_share_location">Cannot share location.</string>
-    <string name="coordinates">Coordinates</string>
+    
+    <!-- Share Types -->
     <string name="address">Address</string>
+    <string name="coordinates">Coordinates</string>
     <string name="maps_link">Maps Link</string>
+    <string name="address_with_link">Address with Map Link</string>
+    
+    <string name="you_are_here">You are Here</string>
+    <string name="your_friend_is_here">Your Friend is Here</string>
 </resources>

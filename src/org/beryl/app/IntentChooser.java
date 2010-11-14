@@ -18,10 +18,18 @@ import android.view.View;
  *
  */
 public class IntentChooser extends Activity implements OnDismissListener {
-	private static final String EXTRA_CHOOSERTITLE = "chooserTitle";
-	private static final String EXTRA_CHOOSABLEINTENTLIST = "choosables";
+	private static final String EXTRA_TITLE = "chooserTitle";
+	private static final String EXTRA_INTENTLIST = "choosables";
+	private static final String EXTRA_ICON = "icon";
+	
+	private static final int NO_ICON_RESID = 0;
+
 
 	public static Intent createChooserIntent(final Context context, final CharSequence title, final ArrayList<ChoosableIntent> intents) throws IllegalArgumentException {
+		return createChooserIntent(context, title, NO_ICON_RESID, intents);
+	}
+	
+	public static Intent createChooserIntent(final Context context, final CharSequence title, final int iconResId, final ArrayList<ChoosableIntent> intents) throws IllegalArgumentException {
 		int i;
 		ChoosableIntent test;
 		final int len = intents.size();
@@ -33,8 +41,9 @@ public class IntentChooser extends Activity implements OnDismissListener {
 		}
 		
 		final Intent intentChooserLauncher = new Intent(context, IntentChooser.class);
-		intentChooserLauncher.putExtra(EXTRA_CHOOSERTITLE, title);
-		intentChooserLauncher.putParcelableArrayListExtra(EXTRA_CHOOSABLEINTENTLIST, intents);
+		intentChooserLauncher.putExtra(EXTRA_TITLE, title);
+		intentChooserLauncher.putExtra(EXTRA_ICON, iconResId);
+		intentChooserLauncher.putParcelableArrayListExtra(EXTRA_INTENTLIST, intents);
 		return intentChooserLauncher;
 	}
 	
@@ -51,7 +60,8 @@ public class IntentChooser extends Activity implements OnDismissListener {
 		try {
 			final ArrayList<ChoosableIntent> choosables = getChoosables();
 			final CharSequence title = getChooserTitle();
-			showChooser(title, choosables);
+			final int iconResId = getChooserIconResId();
+			showChooser(title, iconResId, choosables);
 		} catch(IllegalArgumentException e) {
 			
 			finish();
@@ -65,7 +75,7 @@ public class IntentChooser extends Activity implements OnDismissListener {
 		ArrayList<ChoosableIntent> choosables = null;
 		
 		if(intent != null) {
-			choosables = intent.getParcelableArrayListExtra(EXTRA_CHOOSABLEINTENTLIST);
+			choosables = intent.getParcelableArrayListExtra(EXTRA_INTENTLIST);
 		}
 		
 		if(choosables == null) {
@@ -80,7 +90,7 @@ public class IntentChooser extends Activity implements OnDismissListener {
 		CharSequence title = null;
 		
 		if(intent != null) {
-			title = intent.getCharSequenceExtra(EXTRA_CHOOSERTITLE);
+			title = intent.getCharSequenceExtra(EXTRA_TITLE);
 		}
 		
 		if(title == null) {
@@ -90,7 +100,17 @@ public class IntentChooser extends Activity implements OnDismissListener {
 		return title;
 	}
 
-	private void showChooser(final CharSequence title, final ArrayList<ChoosableIntent> choosables) {
+	private int getChooserIconResId() {
+		final Intent intent = getIntent();
+		int iconResId = NO_ICON_RESID;
+		
+		if(intent != null) {
+			iconResId = intent.getIntExtra(EXTRA_ICON, NO_ICON_RESID);
+		}
+		return iconResId;
+	}
+	
+	private void showChooser(final CharSequence title, final int iconResId, final ArrayList<ChoosableIntent> choosables) {
 		
 		final CharSequence[] labels = new CharSequence[choosables.size()];
 		int i;
@@ -102,6 +122,9 @@ public class IntentChooser extends Activity implements OnDismissListener {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title);
 		
+		if(iconResId != NO_ICON_RESID) {
+			builder.setIcon(iconResId);
+		}
 		builder.setItems(labels, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
 		    	IntentChooser.this.runChoosableIntent(choosables.get(item));

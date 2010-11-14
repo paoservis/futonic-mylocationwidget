@@ -54,4 +54,6 @@ public class Constants
 	public static final int WIDGETLAYOUTSTATE_Default = 3;
 	
 	public static final int PENDINGINTENT_FLAG = PendingIntent.FLAG_UPDATE_CURRENT;
+	
+	public static final String NEWLINE = "\n";
 }
