@@ -14,6 +14,8 @@ public class Constants
 	public static final String URL_GmapsBase = "http://maps.google.com/maps?q=%f,+%f+(%s)&iwloc=A&hl=en&z=13";
 	public static final String URL_GeoHack = "http://toolserver.org/~geohack/geohack.php?pagename=%s&language=en&params=%f;%f";
 	public static final String URL_PanoramioPhotos = "http://www.panoramio.com/map/#lt=%f&ln=%f&z=0&k=2";
+	public static final String URL_GoogleUpdates = "http://www.google.com/m/search?q=%s&tbs=mbl:1";
+	
 
 	public static final String TEXT_UsingProviderPleaseWait = "Finding with %s...";
 	

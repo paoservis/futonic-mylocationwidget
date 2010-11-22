@@ -135,6 +135,12 @@ public class MyLocation implements ILocationWidgetInfo {
 	public Intent getViewIntent() {
 		final ArrayList<ChoosableIntent> intents = new ArrayList<ChoosableIntent>();
 		intents.add(createChoosable(R.string.nolocal_google_maps, Intents.viewWebsite(getGoogleMapsUrl(getOneLineAddress()))));
+		
+		final String googleUpdatesUrl = getGoogleUpdatesUrl();
+		if(googleUpdatesUrl != null) {
+			intents.add(createChoosable(R.string.nolocal_updates_from_google, Intents.viewWebsite(googleUpdatesUrl)));
+		}
+		
 		intents.add(createChoosable(R.string.nolocal_flickr_photos, Intents.viewWebsite(getFlickrPhotosUrl())));
 		intents.add(createChoosable(R.string.nolocal_panoramio_photos, Intents.viewWebsite(getPanoramioPhotosUrl())));
 		intents.add(createChoosable(R.string.nolocal_info_from_geohack, Intents.viewWebsite(getGeoHackUrl())));
@@ -164,8 +170,34 @@ public class MyLocation implements ILocationWidgetInfo {
 		
 		return String.format(Locale.ENGLISH, Constants.URL_GeoHack, Uri.encode(pagename), getLatitude(), getLongitude());
 	}
+	
 	private String getPanoramioPhotosUrl() {
 		return String.format(Locale.ENGLISH, Constants.URL_PanoramioPhotos, getLatitude(), getLongitude());
+	}
+	
+	private String getLocationName() {
+		String name = null;
+
+		if(_address != null) {
+			final String adminArea = _address.getAdminArea();
+			final String locality = _address.getLocality();
+			if(adminArea != null && locality != null) {
+				name = String.format(Locale.ENGLISH, "%s %s", locality, adminArea);
+			}
+		}
+		
+		return name;
+	}
+	
+	private String getGoogleUpdatesUrl() {
+		String result = null;
+		final String locationName = getLocationName();
+		
+		if(locationName != null) {
+			result = String.format(Locale.ENGLISH, Constants.URL_GoogleUpdates, Utility.formatGoogleUrlParameter(locationName));
+		}
+		
+		return result;
 	}
 	
 	public Intent getNotificationIntent() {
