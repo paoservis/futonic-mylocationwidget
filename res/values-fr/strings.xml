@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="widget_label_1x1">Mon lieu de 1 x 1</string>
-  <string name="widget_label_2x1">Mon endroit 2 x 1</string>
-  <string name="widget_label_4x1">Mon endroit 4 x 1</string>
-  <string name="my_location">Mon endroit</string>
-  <string name="app_name">Mon lieu widget</string>
+  <string name="widget_label_1x1">Mon Endroit 1 x 1</string>
+  <string name="widget_label_2x1">Mon Endroit 2 x 1</string>
+  <string name="widget_label_4x1">Mon Endroit 4 x 1</string>
+  <string name="my_location">Mon Endroit</string>
+  <string name="app_name">Mon Endroit Widget</string>
   <string name="location_not_found">Impossible de trouver le lieu</string>
-  <string name="tap_here_to_fix_that">Cliquez ici pour fixer les paramètres d\'emplacement.\'</string>
+  <string name="tap_here_to_fix_that">Cliquez ici pour fixer les paramètres emplacement.</string>
   <string name="share_location">Lieu de partage</string>
   <string name="view_location">Location de vue</string>
   <string name="unknown_location">Lieu inconnu</string>
-  <string name="determining_address">Résolution d\'adresse...\'</string>
-  <string name="finding_location">Trouver l\'endroit\'</string>
-  <string name="tap_to_get_location">&lt; robinet icône pour obtenir l\'emplacement.\'</string>
-  <string name="tap_to_cancel">Robinet d\'annuler.\'</string>
+  <string name="determining_address">Résolution adresse...</string>
+  <string name="finding_location">Trouver endroit</string>
+  <string name="tap_to_get_location">&lt; robinet icône pour obtenir emplacement.</string>
+  <string name="tap_to_cancel">Robinet annuler.</string>
   <string name="cannot_share_location">Ne peuvent pas partager emplacement.</string>
   <!-- Share Types -->
   <string name="address">Adresse</string>
