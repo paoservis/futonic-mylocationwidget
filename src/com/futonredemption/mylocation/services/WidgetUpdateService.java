@@ -5,6 +5,9 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.beryl.location.LocationMonitor;
+import org.beryl.location.PreferGpsLocationMonitorController;
+
 import com.futonredemption.mylocation.Constants;
 import com.futonredemption.mylocation.CustomMessage;
 import com.futonredemption.mylocation.ILocationWidgetInfo;
@@ -15,14 +18,11 @@ import com.futonredemption.mylocation.R;
 import com.futonredemption.mylocation.WidgetUpdater;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -30,18 +30,24 @@ public class WidgetUpdateService extends Service {
 	public static final String TAG = "WidgetUpdateService";
 
 	private final WidgetLocationListener _listener = new WidgetLocationListener();
-	private LocationManager _lm = null;
 	private Timer _watchdog = null;
+	private LocationMonitor _monitor;
 
 	private TimerTask _watchexec = new TimerTask() {
 		@Override
 		public void run() {
+			final WidgetLocationListener listener = _listener;
+			Location location = null;
 			cancelNotification();
-			endService(null);
+
+			if (listener != null) {
+				location = listener.getLocation();
+			}
+			endService(location);
 		}
 	};
 
-	private void cancelNotification() {
+	public void cancelNotification() {
 		Notifications.cancelCustomMessage(this);
 	}
 
@@ -58,8 +64,8 @@ public class WidgetUpdateService extends Service {
 
 		final String action = intent.getStringExtra(Constants.ACTION);
 		if (action.compareToIgnoreCase(Constants.ACTION_Refresh) == 0) {
-			if (_lm == null) {
-				_lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+			if (_monitor == null) {
+				_monitor = new LocationMonitor(this);
 				lockacquired = true;
 			}
 
@@ -92,7 +98,7 @@ public class WidgetUpdateService extends Service {
 		return null;
 	}
 
-	public void endService(MyLocation location) {
+	public void endService(Location location) {
 		boolean allow_refresh = false;
 
 		synchronized (this) {
@@ -103,15 +109,22 @@ public class WidgetUpdateService extends Service {
 				allow_refresh = true;
 			}
 
-			if (_listener != null && _lm != null) {
-				_lm.removeUpdates(_listener);
+			if (_monitor != null) {
+				_monitor.stopListening();
 			}
 		}
 
 		// Sometimes multiple location updates come through. Only accept the
 		// first one which can be determined by the killing of the watchdog.
 		if (allow_refresh) {
-			if (location == null) {
+			
+			if(location == null) {
+				location = _monitor.getBestStaleLocation();
+			}
+			
+			final MyLocation myLocation = convertLocation(location);
+			
+			if (myLocation == null) {
 				WidgetUpdater.updateAll(this, new NoLocationAvailable(this));
 			} else {
 				final CharSequence title = this.getText(R.string.finding_location);
@@ -119,62 +132,122 @@ public class WidgetUpdateService extends Service {
 				final ILocationWidgetInfo widgetInfo = CustomMessage.create(this, title, description);
 				WidgetUpdater.updateAll(this, widgetInfo);
 
-				ResolveAddress(location);
-				WidgetUpdater.updateAll(this, location);
+				resolveAddress(myLocation, 3);
+				WidgetUpdater.updateAll(this, myLocation);
 			}
 		}
 
-		_lm = null;
+		System.gc();
+		_monitor = null;
 		Notifications.cancelCustomMessage(this);
 		this.stopSelf();
 	}
 
 	private void getLocationInformation() {
-		// Attempt to first get GPS.
-		// TODO: use location monitor.
 		String provider = null;
-		if (_lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			provider = LocationManager.GPS_PROVIDER;
-		}
-		if (provider == null) {
-			final Criteria criteria = new Criteria();
-			criteria.setAccuracy(Criteria.ACCURACY_FINE);
-			criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-			criteria.setCostAllowed(false);
-			provider = _lm.getBestProvider(criteria, true);
-		}
-
-		if (provider != null) {
-			final CharSequence title = this.getText(R.string.finding_location);
-			final CharSequence description = String.format(Locale.ENGLISH, Constants.TEXT_UsingProviderPleaseWait,
-					provider);
-			ILocationWidgetInfo widgetInfo = CustomMessage.create(this, title, description);
-			WidgetUpdater.updateAll(this, widgetInfo);
-			beginAcquireLocation(provider);
+		
+		provider = getBestProvider();
+		
+		if(provider != null && ! provider.equals("")) {
+			displayInitialRetrieveMessage(provider);
+			beginAcquireLocation();
 		} else {
 			onLocationAcquired(null);
 		}
 	}
 
-	public class WidgetLocationListener implements LocationListener {
-		private boolean _acquired_location = false;
+	private void displayInitialRetrieveMessage(final String provider) {
+		showUpdatingMessage(provider);
+		//showLastAddress();
+	}
 
-		// private final WidgetUpdateService _parent;
+	private void showUpdatingMessage(final String provider) {
+		final CharSequence title = this.getText(R.string.finding_location);
+		final CharSequence description = String.format(Locale.ENGLISH, Constants.TEXT_UsingProviderPleaseWait,
+				provider);
+		showCustomMessageOnWidget(title, description);
+	}
+	
+	private void showLastAddress() {
+		final MyLocation location = convertLocation(_monitor.getBestStaleLocation());
+		resolveAddress(location, 1);
+		final CharSequence title = this.getText(R.string.finding_location);
+		final CharSequence descriptionLastAddress = location.getTitle() + " " + location.getDescription();
+		showCustomMessageOnWidget(title, descriptionLastAddress);
+	}
+
+	private void showCustomMessageOnWidget(final CharSequence title, final CharSequence description) {
+		final ILocationWidgetInfo widgetInfo = CustomMessage.create(this, title, description);
+		WidgetUpdater.updateAll(this, widgetInfo);
+	}
+	private String getBestProvider() {
+		return _monitor.getBestEnabledProvider();
+	}
+
+	private void beginAcquireLocation() {
+		setupListener();
+		
+		final PreferGpsLocationMonitorController preferGps = new PreferGpsLocationMonitorController(_monitor);
+		preferGps.setLocationTimeAndDistanceIntervals(Constants.INTERVAL_OneSecond, Constants.DISTANCE_ReallyReallyFarAway);
+		preferGps.startMonitor();
+	}
+	
+	private void setupListener() {
+		if(_monitor.isGpsEnabled()) {
+			_listener.setPreferredAccuracy(Constants.ACCURACY_PreferredFine);
+		}
+		else {
+			_listener.setPreferredAccuracy(Constants.ACCURACY_PreferredCoarse);
+		}
+			
+		_monitor.addListener(_listener);
+	}
+
+	public class WidgetLocationListener implements LocationListener {
+		private float _preferredAccuracy;
+		private Location _bestLocation = null;
+		private final Object _lockMonitor = new Object();
+		
 		public WidgetLocationListener() {
 		}
 
 		public boolean hasLocation() {
-			return _acquired_location;
+			return _bestLocation != null;
 		}
 
-		public void onLocationChanged(Location location) {
-			final MyLocation myLocation = new MyLocation(WidgetUpdateService.this, location);
-			_acquired_location = true;
-			WidgetUpdateService.this.onLocationAcquired(myLocation);
+		public void setPreferredAccuracy(final float preferredAccuracy) {
+			_preferredAccuracy = preferredAccuracy;
 		}
 
+		public void onLocationChanged(final Location location) {
+			final float accuracy = location.getAccuracy();
+			final float preferredAccuracy = _preferredAccuracy;
+			boolean shouldStopListening = false;
+			android.util.Log.i("LOCATION", location.toString());
+			android.util.Log.i("LOCATION", Float.toString(location.getAccuracy()));
+			synchronized(_lockMonitor) {
+				if(_bestLocation == null || accuracy <= _bestLocation.getAccuracy()) {
+					_bestLocation = location;
+					
+					if(accuracy <= preferredAccuracy) {
+						shouldStopListening = true;
+					}
+				}
+			}
+			
+			if(shouldStopListening) {
+				WidgetUpdateService.this.onLocationAcquired(getLocation());
+			}
+		}
+
+		public Location getLocation() {
+			return _bestLocation;
+		}
+		
 		public void onProviderDisabled(String provider) {
-			WidgetUpdateService.this.onLocationAcquired(null);
+			if(! _monitor.isAnyProviderEnabled()) {
+				WidgetUpdateService.this.onLocationAcquired(getLocation());
+			}
 		}
 
 		public void onProviderEnabled(String provider) {
@@ -184,25 +257,36 @@ public class WidgetUpdateService extends Service {
 		}
 	}
 
-	public void ResolveAddress(MyLocation location) {
+	public void resolveAddress(MyLocation location, int attempts) {
 		
 		final double latitude = location.getLatitude();
 		final double longitude = location.getLongitude();
 
 		Address address = null;
 		
-		// Try to get the address up to 3 times. Sometimes the first attempt doesn't work.
-		address = tryFindAddress(latitude, longitude);
-		if(address == null) {
-			address = tryFindAddress(latitude, longitude);
+		// Limit 1 - 5 attempts
+		if(attempts <= 0) {
+			attempts = 1;
 		}
-		if(address == null) {
-			address = tryFindAddress(latitude, longitude);
+		else if(attempts > 5) {
+			attempts = 5;
 		}
 		
+		while (attempts > 0 && address == null) {
+			address = tryFindAddress(latitude, longitude);
+			attempts--;
+		}
+
 		if (address != null) {
 			location.attachAddress(address);
 		}
+	}
+	
+	public MyLocation convertLocation(final Location location) {
+		if (location == null)
+			return null;
+		
+		return new MyLocation(this, location);
 	}
 	
 	private Address tryFindAddress(double latitude, double longitude) {
@@ -220,12 +304,7 @@ public class WidgetUpdateService extends Service {
 		return address;
 	}
 
-	public void onLocationAcquired(final MyLocation location) {
+	public void onLocationAcquired(final Location location) {
 		endService(location);
-	}
-
-	private void beginAcquireLocation(final String provider) {
-		_lm.requestLocationUpdates(provider, Constants.INTERVAL_OneSecond, Constants.DISTANCE_ReallyReallyFarAway,
-				_listener);
 	}
 }
