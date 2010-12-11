@@ -7,12 +7,12 @@ public class Constants
 	public static final int DISTANCE_ReallyReallyFarAway = 100000;
 	
 	public static final int INTERVAL_Timeout = 60000;
+	public static final int INTERVAL_HalfSecond = 1000;
 	public static final int INTERVAL_OneSecond = 1000;
 	public static final int INTERVAL_NotificationLed = 5000;
 	
-	// In meters.
-	public static final float ACCURACY_PreferredFine = 30;
-	public static final float ACCURACY_PreferredCoarse = 1000;
+	public static final float ACCURACY_PreferredFine = 150; // About .1 miles (in meters)
+	public static final float ACCURACY_PreferredCoarse = 1500; // About a mile (in meters)
 	
 	public static final String URL_FlickrPhotos = "http://m.flickr.com/nearby/%f,%f?show=thumb&fromfilter=1&by=everyone&taken=alltime&sort=mostrecent";
 	public static final String URL_GmapsBase = "http://maps.google.com/maps?q=%f,+%f+(%s)&iwloc=A&hl=en&z=13";

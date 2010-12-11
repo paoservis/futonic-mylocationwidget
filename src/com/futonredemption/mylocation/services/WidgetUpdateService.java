@@ -179,7 +179,7 @@ public class WidgetUpdateService extends Service {
 		setupListener();
 		
 		final PreferGpsLocationMonitorController preferGps = new PreferGpsLocationMonitorController(_monitor);
-		preferGps.setLocationTimeAndDistanceIntervals(Constants.INTERVAL_OneSecond, Constants.DISTANCE_ReallyReallyFarAway);
+		preferGps.setLocationTimeAndDistanceIntervals(Constants.INTERVAL_HalfSecond, Constants.DISTANCE_ReallyReallyFarAway);
 		preferGps.startMonitor();
 	}
 	
