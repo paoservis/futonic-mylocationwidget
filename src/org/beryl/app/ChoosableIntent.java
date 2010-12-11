@@ -36,8 +36,7 @@ public class ChoosableIntent implements Parcelable {
 		dest.writeBundle(bundle);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+	public static final Parcelable.Creator<ChoosableIntent> CREATOR = new Parcelable.Creator<ChoosableIntent>() {
         public ChoosableIntent createFromParcel(final Parcel in) {
             return new ChoosableIntent(in);
         }
