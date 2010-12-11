@@ -158,7 +158,6 @@ public class WidgetUpdateService extends Service {
 
 	private void displayInitialRetrieveMessage(final String provider) {
 		showUpdatingMessage(provider);
-		//showLastAddress();
 	}
 
 	private void showUpdatingMessage(final String provider) {
@@ -166,14 +165,6 @@ public class WidgetUpdateService extends Service {
 		final CharSequence description = String.format(Locale.ENGLISH, Constants.TEXT_UsingProviderPleaseWait,
 				provider);
 		showCustomMessageOnWidget(title, description);
-	}
-	
-	private void showLastAddress() {
-		final MyLocation location = convertLocation(_monitor.getBestStaleLocation());
-		resolveAddress(location, 1);
-		final CharSequence title = this.getText(R.string.finding_location);
-		final CharSequence descriptionLastAddress = location.getTitle() + " " + location.getDescription();
-		showCustomMessageOnWidget(title, descriptionLastAddress);
 	}
 
 	private void showCustomMessageOnWidget(final CharSequence title, final CharSequence description) {
@@ -223,8 +214,7 @@ public class WidgetUpdateService extends Service {
 			final float accuracy = location.getAccuracy();
 			final float preferredAccuracy = _preferredAccuracy;
 			boolean shouldStopListening = false;
-			android.util.Log.i("LOCATION", location.toString());
-			android.util.Log.i("LOCATION", Float.toString(location.getAccuracy()));
+			
 			synchronized(_lockMonitor) {
 				if(_bestLocation == null || accuracy <= _bestLocation.getAccuracy()) {
 					_bestLocation = location;

@@ -12,7 +12,7 @@ public class Constants
 	
 	// In meters.
 	public static final float ACCURACY_PreferredFine = 30;
-	public static final float ACCURACY_PreferredCoarse = 200;
+	public static final float ACCURACY_PreferredCoarse = 1000;
 	
 	public static final String URL_FlickrPhotos = "http://m.flickr.com/nearby/%f,%f?show=thumb&fromfilter=1&by=everyone&taken=alltime&sort=mostrecent";
 	public static final String URL_GmapsBase = "http://maps.google.com/maps?q=%f,+%f+(%s)&iwloc=A&hl=en&z=13";
