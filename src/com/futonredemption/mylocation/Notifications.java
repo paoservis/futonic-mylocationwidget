@@ -35,7 +35,7 @@ public class Notifications {
 		final NotificationManager nm = getNotificationManager(context);
 		final Notification notifier = new Notification();
 		notifier.flags = Notification.FLAG_ONGOING_EVENT;
-		notifier.icon = R.drawable.stat_icon;
+		notifier.icon = R.drawable.ic_stat_findlocation;
 		if(ticker_text != null)
 		{
 			notifier.tickerText = ticker_text;
