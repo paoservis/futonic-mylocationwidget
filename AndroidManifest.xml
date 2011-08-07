@@ -11,6 +11,17 @@
                   android:excludeFromRecents="true">
         </activity>
         
+        <activity android:name="com.futonredemption.mylocation.activities.MyLocationActivity"
+                  android:label="@string/app_name"
+                  android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+                  android:theme="@style/Theme.ActivityDefault"
+                  android:launchMode="singleTask">
+			<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
 		<receiver android:name=".appwidgets.AppWidgetProvider1x1" android:label="@string/widget_label_1x1"
 			android:enabled="true" android:exported="true">
 			<intent-filter>
