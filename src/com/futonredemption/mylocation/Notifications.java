@@ -17,7 +17,7 @@ public class Notifications {
 			Notification notifier = null;
 			notifier = new Notification();
 			notifier.flags = Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-			notifier.icon = R.drawable.icon;
+			notifier.icon = R.drawable.ic_stat_findlocation;
 			notifier.ledOffMS = Constants.INTERVAL_NotificationLed;
 			notifier.ledOnMS = Constants.INTERVAL_NotificationLed;
 			notifier.ledARGB = 0xff0000ff;
