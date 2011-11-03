@@ -1,16 +1,18 @@
 syntax: glob
 *.class
-*.suo
 *.apk
+*.dex
+*.ap_
+*.suo
 
 syntax: regexp
-^bin\\*
-^jars\\*
-^jar-sources\\*
-^javadoc\\*
-^obj\\*
-^obf\\*
-^gen\\*
-^log\\*
-^.svn\\*
-^.metadata\\*
+^(.*[\\/])?gen[\\/].*
+^(.*[\\/])?bin[\\/].*
+^(.*[\\/])?obj[\\/].*
+^(.*[\\/])?log[\\/].*
+^(.*[\\/])?obf[\\/].*
+^(.*[\\/])?jars[\\/].*
+^(.*[\\/])?jar-sources[\\/].*
+^(.*[\\/])?javadoc[\\/].*
+^(.*[\\/])?\.svn[\\/].*
+^(.*[\\/])?\.metadata[\\/].*
